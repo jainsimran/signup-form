@@ -1,64 +1,80 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import { validEmailFormat, minNameLength } from './constants';
+
 
 export default function App() {
   const [name, setName] = useState('');
   const [isNameValid, setIsNameValid] = useState(false);
+  const [nameErrorMessage, setNameErrorMessage] = useState('');
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const validEmailFormat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumErrorMessage, setPhoneNumErrorMessage] = useState('');
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
   const [password, setPassword] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  function validateName(event) {
-    setName(event.target.value);
-    if (event.target.value.length >= 4) {
+  function validateName() {
+    if (name.trim().length >= minNameLength) {
       setIsNameValid(true);
+      setNameErrorMessage('');
     }
     else {
       setIsNameValid(false);
+      setNameErrorMessage('Name should have minimum 4 letters');
     }
   }
 
-  function validateEmail(event) {
-    setEmail(event.target.value);
-    if (validEmailFormat.test(event.target.value)) {
+  function validateEmail() {
+    if (validEmailFormat.test(email)) {
       setIsEmailValid(true);
+      setEmailErrorMessage('');
     }
     else {
       setIsEmailValid(false);
+      setEmailErrorMessage('Enter valid email address');
     }
   }
 
-  function validatePhoneNumber(event) {
-    setPhoneNumber(event.target.value);
-    if (event.target.value.length == 10) {
+  function validatePhoneNumber() {
+    if (phoneNumber.length >= 10 && phoneNumber.length <= 12) {
       setIsPhoneNumberValid(true);
+      setPhoneNumErrorMessage('');
     }
     else {
       setIsPhoneNumberValid(false);
+      setPhoneNumErrorMessage('Phone number should have 10 or 12 digits');
     }
   }
 
-  function validatePassword(event) {
-    setPassword(event.target.value);
-    if (event.target.value.length >= 6) {
+  function validatePassword() {
+    if (password.trim().length >= 6) {
       setIsPasswordValid(true);
+      setPasswordErrorMessage('');
     }
     else {
       setIsPasswordValid(false);
+      setPasswordErrorMessage('Enter valid atleast 6 words password');
     }
   }
 
   function onSubmit() {
     if (isNameValid && isEmailValid && isPhoneNumberValid && isPasswordValid) {
       console.log('form submited');
+      setName('');
+      setEmail('');
+      setPhoneNumber('');
+      setPassword('');
+      setIsFormSubmitted(true);
     }
     else {
       console.log('check the form again');
+      setIsFormSubmitted(false);
     }
   }
 
@@ -71,58 +87,63 @@ export default function App() {
     }
   }, [isNameValid, isEmailValid, isPhoneNumberValid, isPasswordValid]);
 
-
-
   return (
     <>
-      <h1> Sign up </h1>
+      {isFormSubmitted ? <div className='form'>Your account has been created. </div> : 
+      <div className='form'>
+      <h1> SIGN UP</h1>
       <div>
         <label>
-          Name:
+        Name:
          <input
             type='text'
             value={name}
-            onChange={(event) => validateName(event)}
-            // onBlur={(event) => validateName(event)}
+            onChange={(event) => setName(event.target.value)}
+            onBlur={validateName}
           />
-          {isNameValid ? null : name === '' ? null : <div>Please enter valid name with minimum 4 words</div>}
+          {nameErrorMessage === '' ? null : <div className='warning'>{nameErrorMessage}</div>}
         </label>
       </div>
       <div>
         <label>
-          Email: 
+        Email: 
            <input
             type='email'
             value={email}
-            onChange={(event) => validateEmail(event)}
-            // onBlur={(event) => validateEmail(event)}
+            onChange={(event) => setEmail(event.target.value)}
+            onBlur={validateEmail}
           />
-          {isEmailValid ? null : email==='' ? null : <div>Enter valid email address</div>}
+          {emailErrorMessage === '' ? null : <div className='warning'>{emailErrorMessage}</div>}
         </label>
       </div>
       <div>
         <label>
-          Phone number: 
+        Phone number: 
            <input
             type='number'
             value={phoneNumber}
-            onChange={(event) => validatePhoneNumber(event)}
+            onChange={(event) => setPhoneNumber(event.target.value)}
+            onBlur={validatePhoneNumber}
           />
-          {isPhoneNumberValid ? null : phoneNumber === '' ? null : <div>Enter valid phone number</div>}
+          {phoneNumErrorMessage === '' ? null : <div className='warning'>{phoneNumErrorMessage}</div>}
         </label>
       </div>
       <div>
         <label>
-          Password: 
+        Password: 
            <input
             type='password'
             value={password}
-            onChange={(event) => validatePassword(event)}
+            onChange={(event) => setPassword(event.target.value)}
+            onBlur={validatePassword}
           />
-          {isPasswordValid ? null : password === '' ? null : <div>Enter valid atleast 6 words password</div>}
+          {passwordErrorMessage === '' ? null : <div className='warning'>{passwordErrorMessage}</div>}
         </label>
       </div>
-      <input type='submit' onClick={onSubmit} disabled={!isFormValid}/>
+          <button type='submit' onClick={onSubmit} disabled={!isFormValid} className='submitBtn'> CREATE ACCOUNT </button>
+        </div>
+      }
+
     </>
   )
 }

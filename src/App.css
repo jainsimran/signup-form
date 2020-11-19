@@ -1,6 +1,36 @@
-div{
-    padding: 2%;
+body{
+    font-family: serif;
+    background-color: #30475e;
+    color: #222831;
+}
+h1{
+    font-family: fantasy;
+}
+.form div{
+    margin: 2% 0;
 }
 input {
-    margin: 2%;
+    margin: 1%;
+    background-color: #e8e8e8!important; 
+}
+input[type=number] {
+    appearance: none;
+}
+.warning{
+    color: #f05454;
+}
+.submitBtn{
+    background-color: #30475e;
+    padding: 10px;
+    color: #e8e8e8;
+}
+.form{
+    border: 2px #222831 solid;
+    width: 50%;
+    margin: 0 auto;
+    padding: 2%;
+    text-align: center;
+    background-color: #e8e8e8;
+    position: relative;
+    top: 20vh;
 }
